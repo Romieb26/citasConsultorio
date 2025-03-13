@@ -22,7 +22,7 @@ func main() {
 
 	// Configuración de CORS
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"}, // Cambia esto según tu frontend
+		AllowOrigins:     []string{"http://localhost:4200"}, // Cambia esto según tu frontend
 		AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -31,9 +31,9 @@ func main() {
 
 	routes.SetupCitaRoutes(router, citaRepo)
 
-	log.Println("Iniciando el Servidor en el puerto 8080...")
+	log.Println("Iniciando el Servidor en el puerto 8000...")
 
-	if err := router.Run(":8080"); err != nil {
+	if err := router.Run(":8000"); err != nil {
 		log.Fatal("Error al iniciar el servidor:", err)
 	}
 }

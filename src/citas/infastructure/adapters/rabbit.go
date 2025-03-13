@@ -15,7 +15,7 @@ func failOnError(err error, msg string) {
 }
 
 func Execute(body []byte) {
-	conn, err := amqp.Dial("amqp://leo:1234@34.235.202.211:5672/")
+	conn, err := amqp.Dial("amqp://romina:romina264@3.230.241.180:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
@@ -24,7 +24,7 @@ func Execute(body []byte) {
 	defer ch.Close()
 
 	err = ch.ExchangeDeclare(
-		"order",  // name
+		"cita",  // name
 		"direct", // type
 		true,     // durable
 		false,    // auto-deleted
@@ -38,8 +38,8 @@ func Execute(body []byte) {
 	defer cancel()
 
 	err = ch.PublishWithContext(ctx,
-		"order", // exchange
-		"123",   // routing key
+		"cita", // exchange
+		"2604",   // routing key
 		false,   // mandatory
 		false,   // immediate
 		amqp.Publishing{

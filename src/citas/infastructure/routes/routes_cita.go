@@ -16,8 +16,8 @@ func SetupCitaRoutes(router *gin.Engine, repo repositories.ICita) {
 
 	citaGroup := router.Group("/citas")
 	{
-		citaGroup.POST("", createCitaController.Run)
-		citaGroup.GET("", controllers.GetAllCitasController(repo))
+		citaGroup.POST("/", createCitaController.Run)
+		citaGroup.GET("/", controllers.GetAllCitasController(repo))
 		citaGroup.DELETE("/:id", deleteCitaController.DeleteCita)
 	}
 }
