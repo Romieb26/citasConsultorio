@@ -1,3 +1,4 @@
+// citas.go
 package entities
 
 type Cita struct {
@@ -8,6 +9,60 @@ type Cita struct {
 	AreaCita         string `json:"areaCita" gorm:"type:enum('Medicina General', 'Pediatría', 'Oftalmología', 'Dermatología', 'Cardiología');not null"`
 	Fecha            string `json:"fecha" gorm:"column:fecha;not null"`
 	Hora             string `json:"hora" gorm:"column:hora;not null"`
+}
+
+// Setters
+func (c *Cita) SetNombrePaciente(nombre string) {
+	c.NombrePaciente = nombre
+}
+
+func (c *Cita) SetApellidoPaciente(apellido string) {
+	c.ApellidoPaciente = apellido
+}
+
+func (c *Cita) SetNumeroContacto(numero string) {
+	c.NumeroContacto = numero
+}
+
+func (c *Cita) SetAreaCita(area string) {
+	c.AreaCita = area
+}
+
+func (c *Cita) SetFecha(fecha string) {
+	c.Fecha = fecha
+}
+
+func (c *Cita) SetHora(hora string) {
+	c.Hora = hora
+}
+
+// Getters
+func (c *Cita) GetCitaID() int32 {
+	return c.CitaID
+}
+
+func (c *Cita) GetNombrePaciente() string {
+	return c.NombrePaciente
+}
+
+func (c *Cita) GetApellidoPaciente() string {
+	return c.ApellidoPaciente
+}
+
+func (c *Cita) GetNumeroContacto() string {
+	return c.NumeroContacto
+}
+
+func (c *Cita) GetAreaCita() string {
+	return c.AreaCita
+}
+
+func (c *Cita) GetFecha() string {
+	return c.Fecha
+}
+
+func (c *Cita) GetHora() string {
+	return c.Hora
 }
 
 func NewCita(nombrePaciente, apellidoPaciente, numeroContacto, areaCita, fecha, hora string) *Cita {

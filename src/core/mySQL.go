@@ -1,33 +1,44 @@
+// mySQL.go
 package core
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
-func ConnectToDataBase() (*gorm.DB, error) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+var db *sql.DB
+
+// InitDB inicializa la conexión a la base de datos.
+func InitDB() {
+	if err := godotenv.Load(); err != nil {
+		log.Println("Advertencia: No se pudo cargar .env")
 	}
 
-	credentials := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_HOST"),
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
+		os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_HOST"), os.Getenv("DB_PORT"),
 		os.Getenv("DB_NAME"),
 	)
 
-	log.Println("Conectando a la base de datos:", os.Getenv("DB_NAME"))
-
-	db, err := gorm.Open(mysql.Open(credentials), &gorm.Config{})
+	var err error
+	db, err = sql.Open("mysql", dsn)
 	if err != nil {
-		log.Fatal("Error connecting to the database", err)
+		log.Fatal("Error al conectar a la BD:", err)
 	}
-	return db, nil
+
+	if err = db.Ping(); err != nil {
+		log.Fatal("No se pudo conectar a la BD:", err)
+	}
+
+	fmt.Println("Conexión a la BD exitosa")
+}
+
+// GetDB retorna la conexión a la base de datos.
+func GetDB() *sql.DB {
+	return db
 }

@@ -1,38 +1,36 @@
 package main
 
 import (
-	"apiHospital/src/citas/infastructure/adapters"
-	"apiHospital/src/citas/infastructure/routes"
-	"apiHospital/src/core"
 	"log"
+
+	"apiHospital/src/citas/infrastructure"
+	"apiHospital/src/core"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	db, err := core.ConnectToDataBase()
-	if err != nil {
-		log.Fatal("Error al conectar a la base de datos:", err)
-	}
+	// Inicializar la conexión a la base de datos
+	core.InitDB()
 
-	citaRepo := adapters.NewMySQLRepository(db)
-
+	// Crear un router con Gin
 	router := gin.Default()
 
 	// Configuración de CORS
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4200"}, // Cambia esto según tu frontend
-		AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
+		AllowOrigins:     []string{"*"}, // Ajusta el puerto según sea necesario
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}))
 
-	routes.SetupCitaRoutes(router, citaRepo)
+	// Inicializar dependencias
+	citaRouter := infrastructure.NewCitaRouter(router)
+	citaRouter.Run() // Agregar rutas
 
-	log.Println("Iniciando el Servidor en el puerto 8000...")
-
+	// Iniciar el servidor
+	log.Println("Servidor corriendo en http://localhost:8000")
 	if err := router.Run(":8000"); err != nil {
 		log.Fatal("Error al iniciar el servidor:", err)
 	}
