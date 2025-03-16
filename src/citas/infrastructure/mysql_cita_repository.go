@@ -22,7 +22,7 @@ func NewMySQLCitaRepository() repositories.ICita {
 
 func (mysql *MySQLCitaRepository) Save(cita *entities.Cita) error {
 	query := `
-		INSERT INTO Citas (nombre_paciente, apellido_paciente, numero_contacto, area_cita, fecha, hora)
+		INSERT INTO Cita (nombre_paciente, apellido_paciente, numero_contacto, area_cita, fecha, hora)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
 	_, err := mysql.conn.Exec(
@@ -43,7 +43,7 @@ func (mysql *MySQLCitaRepository) Save(cita *entities.Cita) error {
 
 func (mysql *MySQLCitaRepository) Update(cita *entities.Cita) error {
 	query := `
-		UPDATE Citas
+		UPDATE Cita
 		SET nombre_paciente = ?, apellido_paciente = ?, numero_contacto = ?, area_cita = ?, fecha = ?, hora = ?
 		WHERE cita_id = ?
 	`
@@ -77,7 +77,7 @@ func (mysql *MySQLCitaRepository) Update(cita *entities.Cita) error {
 }
 
 func (mysql *MySQLCitaRepository) Delete(id int32) error {
-	query := "DELETE FROM Citas WHERE cita_id = ?"
+	query := "DELETE FROM Cita WHERE cita_id = ?"
 	result, err := mysql.conn.Exec(query, id)
 	if err != nil {
 		log.Println("Error al eliminar la cita:", err)
@@ -101,7 +101,7 @@ func (mysql *MySQLCitaRepository) Delete(id int32) error {
 func (mysql *MySQLCitaRepository) GetById(id int32) (*entities.Cita, error) {
 	query := `
 		SELECT cita_id, nombre_paciente, apellido_paciente, numero_contacto, area_cita, fecha, hora
-		FROM Citas
+		FROM Cita
 		WHERE cita_id = ?
 	`
 	row := mysql.conn.QueryRow(query, id)
@@ -131,7 +131,7 @@ func (mysql *MySQLCitaRepository) GetById(id int32) (*entities.Cita, error) {
 func (mysql *MySQLCitaRepository) GetAll() ([]entities.Cita, error) {
 	query := `
 		SELECT cita_id, nombre_paciente, apellido_paciente, numero_contacto, area_cita, fecha, hora
-		FROM Citas
+		FROM Cita
 	`
 	rows, err := mysql.conn.Query(query)
 	if err != nil {
