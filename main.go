@@ -14,6 +14,9 @@ func main() {
 	// Inicializar la conexión a la base de datos
 	core.InitDB()
 
+	// Inicializar la conexión a RabbitMQ
+	core.InitRabbitMQ()
+
 	// Crear un router con Gin
 	router := gin.Default()
 

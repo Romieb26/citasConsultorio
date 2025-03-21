@@ -2,10 +2,12 @@
 package infrastructure
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"apiHospital/src/citas/application"
-	"apiHospital/src/citas/domain/entities" // Importar el paquete entities
+	"apiHospital/src/citas/domain/entities"
+	"apiHospital/src/core"
 
 	"github.com/gin-gonic/gin"
 )
@@ -39,7 +41,7 @@ func (ctrl *CreateCitaController) Run(c *gin.Context) {
 		return
 	}
 
-	cita := entities.NewCita( // Usar entities.NewCita
+	cita := entities.NewCita(
 		citaRequest.NombrePaciente,
 		citaRequest.ApellidoPaciente,
 		citaRequest.NumeroContacto,
@@ -53,6 +55,25 @@ func (ctrl *CreateCitaController) Run(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "No se pudo crear la cita",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	// Publicar mensaje en RabbitMQ
+	message, err := json.Marshal(createdCita)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Error al serializar la cita",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	err = core.PublishMessage("citas_creadas", message)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Error al publicar mensaje en RabbitMQ",
 			"error":   err.Error(),
 		})
 		return
